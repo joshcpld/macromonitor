@@ -1,22 +1,28 @@
-page,sub_section,chart_id,chart_title,series_name,api_source,api_code,frequency,chart_type
-Activity,GDP,headline_gdp,Headline GDP,Headline GDP,readabs,5206.0,quarterly,line
-Activity,GDP,gdp_decomp,GDP Growth Decomposition,GDP Growth Decomposition,readabs,5206.0,quarterly,decomp
-Activity,Consumer,retail_turnover,Retail Turnover,Retail Turnover,readabs,8501.0,monthly,line
-Activity,Consumer,real_consumption,Real Household Consumption,Real Household Consumption,readabs,5206.0,quarterly,line
-Activity,Business Investment,capex,Private New Capital Expenditure,Private New Capital Expenditure,readabs,5625.0,quarterly,line
-Activity,Business Investment,business_credit,Business Credit,Business Credit,readrba,D1,monthly,line
-Activity,Dwelling Investment,dwelling_approvals,Dwelling Approvals,Dwelling Approvals,readabs,8731.0,monthly,line
-Activity,Dwelling Investment,housing_finance,Housing Finance,Housing Finance,readabs,5601.0,monthly,line
-Activity,Government,govt_consumption,Government Final Consumption,Government Final Consumption,readabs,5206.0,quarterly,line
-Activity,Government,public_capex,Public Gross Fixed Capital Formation,Public Gross Fixed Capital Formation,readabs,5206.0,quarterly,line
-Activity,Trade,trade_balance,International Trade Balance,International Trade Balance,readabs,5368.0,monthly,line
-Activity,Trade,terms_of_trade,Terms of Trade,Terms of Trade,readabs,5206.0,quarterly,line
-Prices,Inflation,trimmed_mean_cpi,Trimmed Mean CPI,Trimmed Mean CPI,readabs,6401.0,quarterly,line
-Prices,Inflation,headline_cpi,Headline CPI,Headline CPI,readabs,6401.0,quarterly,line
-Prices,Inflation,monthly_cpi,Monthly CPI Indicator,Monthly CPI Indicator,readabs,6484.0,monthly,line
-Prices,Wages,wpi,Wage Price Index,Wage Price Index,readabs,6345.0,quarterly,line
-Labour Market,Labour Force Survey (LFS) Core Data,unemployment_rate,Unemployment Rate,Unemployment Rate,readabs,6202.0,monthly,line
-Labour Market,Labour Force Survey (LFS) Core Data,participation_rate,Participation Rate,Participation Rate,readabs,6202.0,monthly,line
-Labour Market,Labour Force Survey (LFS) Core Data,hours_worked,Monthly Hours Worked,Monthly Hours Worked,readabs,6202.0,monthly,line
-Labour Market,Broader Labour Demand,job_vacancies,ABS Job Vacancies,ABS Job Vacancies,readabs,6354.0,quarterly,line
-Labour Market,Broader Labour Demand,rba_labour,RBA Labour Market Aggregates,RBA Labour Market Aggregates,readrba,G1,quarterly,line
+page,sub_section,chart_id,chart_title,series_name,api_source,api_code,table_no,series_id,series_filter,frequency,transform_type,series_role
+Activity,GDP,headline_gdp,Headline GDP,Real GDP,readabs,5206.0,2,A2304402X,Gross domestic product,quarterly,standard,series
+Activity,GDP,gdp_decomp,GDP Growth Decomposition,Real GDP,readabs,5206.0,2,A2304402X,Gross domestic product,quarterly,additive_decomp,aggregate
+Activity,GDP,gdp_decomp,GDP Growth Decomposition,Consumption,readabs,5206.0,2,A2304081W,Households ; Final consumption expenditure,quarterly,additive_decomp,component
+Activity,GDP,gdp_decomp,GDP Growth Decomposition,Business Investment,readabs,5206.0,2,A2304095K,Total private business investment,quarterly,additive_decomp,component
+Activity,GDP,gdp_decomp,GDP Growth Decomposition,Dwelling Investment,readabs,5206.0,2,A2304098T,Private ; Gross fixed capital formation - Dwellings - Total,quarterly,additive_decomp,component
+Activity,GDP,gdp_decomp,GDP Growth Decomposition,Government,readabs,5206.0,2,A2304080V,General government ; Final consumption expenditure,quarterly,additive_decomp,component
+Activity,GDP,gdp_decomp,GDP Growth Decomposition,Exports,readabs,5206.0,2,A2304114F,Exports of goods and services,quarterly,additive_decomp,component
+Activity,GDP,gdp_decomp,GDP Growth Decomposition,Imports,readabs,5206.0,2,A2304115J,Imports of goods and services,quarterly,additive_decomp,component_imports
+Activity,GDP,gdp_decomp,GDP Growth Decomposition,Inventories & Other,,,,,,quarterly,additive_decomp,residual
+Activity,Consumer,retail_turnover,Retail Turnover,Retail Turnover,readabs,8501.0,11,,Turnover ; Total,monthly,standard,series
+Activity,Consumer,real_consumption,Real Household Consumption,Real Household Consumption,readabs,5206.0,2,A2304081W,Households ; Final consumption expenditure,quarterly,standard,series
+Activity,Business Investment,capex,Private New Capital Expenditure,Private New Capital Expenditure,readabs,5625.0,2,,Total new capital expenditure,quarterly,standard,series
+Activity,Business Investment,business_credit,Business Credit,Business Credit,readrba,D1,,,Business credit,monthly,standard,series
+Activity,Dwelling Investment,dwelling_approvals,Dwelling Approvals,Dwelling Approvals,readabs,8731.0,1,,Total dwellings,monthly,standard,series
+Activity,Dwelling Investment,housing_finance,Housing Finance,Housing Finance,readabs,5601.0,1,A130268891F,Total dwellings excluding refinancing ; New loan commitments ; Value,monthly,standard,series
+Activity,Government,govt_consumption,Government Final Consumption,Government Final Consumption,readabs,5206.0,2,A2304080V,General government ; Final consumption expenditure,quarterly,standard,series
+Activity,Government,public_capex,Public Gross Fixed Capital Formation,Public Gross Fixed Capital Formation,readabs,5206.0,2,A2304109L,Public ; Gross fixed capital formation,quarterly,standard,series
+Activity,Trade,trade_balance,International Trade Balance,International Trade Balance,readabs,5368.0,1,A2718594C,Balance on goods,monthly,standard,series
+Activity,Trade,terms_of_trade,Terms of Trade,Terms of Trade,readabs,5206.0,1,A2304200A,Terms of trade: Index,quarterly,standard,series
+Prices,Inflation,trimmed_mean_cpi,Trimmed Mean CPI,Trimmed Mean CPI,readabs,6401.0,3,,Trimmed mean,quarterly,standard,series
+Prices,Inflation,headline_cpi,Headline CPI,Headline CPI,readabs,6401.0,2,A130393720C,All groups CPI ; Australia,quarterly,standard,series
+Prices,Inflation,monthly_cpi,Monthly CPI Indicator,Monthly CPI Indicator,readabs,6484.0,1,A128481587A,All groups CPI seasonally adjusted ; Australia,monthly,standard,series
+Prices,Wages,wpi,Wage Price Index,Wage Price Index,readabs,6345.0,1,A2713846W,Total hourly rates of pay excluding bonuses,quarterly,standard,series
+Labour Market,Labour Force Survey (LFS) Core Data,unemployment_rate,Unemployment Rate,Unemployment Rate,readabs,6202.0,1,A84423050A,Unemployment rate ; Persons,monthly,standard,series
+Labour Market,Labour Force Survey (LFS) Core Data,participation_rate,Participation Rate,Participation Rate,readabs,6202.0,1,A84423051C,Participation rate ; Persons,monthly,standard,series
+Labour Market,Labour Force Survey (LFS) Core Data,hours_worked,Monthly Hours Worked,Monthly Hours Worked,readabs,6202.0,1,A84426277X,Monthly hours worked in all jobs ; Persons,monthly,standard,series
+Labour Market,Broader Labour Demand,job_vacancies,ABS Job Vacancies,ABS Job Vacancies,readabs,6354.0,1,,Job vacancies,quarterly,standard,series

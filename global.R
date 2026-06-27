@@ -10,6 +10,9 @@ library(shinyWidgets)
 library(tidyverse)
 library(lubridate)
 
+# Transformation definitions and Phase 3 implementation stubs
+source("R/transformations.R")
+
 ################################################################################
 # Configuration
 #
@@ -18,15 +21,16 @@ library(lubridate)
 # numbers (01_australia.csv, 02_usa.csv …) to control tab order.
 #
 # CSV columns (country is injected automatically from the filename):
-#   page         — LHS nav item
-#   sub_section  — section header within page
-#   chart_id     — unique chart ID; MULTIPLE ROWS sharing chart_id → multi-line
-#   chart_title  — Plotly chart title
-#   series_name  — legend label per line (= chart_title for single-line charts)
-#   api_source   — "readabs" or "readrba"
-#   api_code     — ABS catalog number or RBA table code
-#   frequency    — "monthly" or "quarterly"
-#   chart_type   — "line" or "decomp"
+#   page            — LHS nav item
+#   sub_section     — section header within page
+#   chart_id        — unique chart ID; MULTIPLE ROWS sharing chart_id → multi-line
+#   chart_title     — Plotly chart title
+#   series_name     — legend label per line (= chart_title for single-line charts)
+#   api_source      — "readabs" or "readrba"  (blank for residual rows)
+#   api_code        — ABS catalog number or RBA table code  (blank for residual rows)
+#   frequency       — "monthly" or "quarterly"
+#   transform_type  — "standard" or "additive_decomp"  (see R/transformations.R)
+#   series_role     — "series" | "aggregate" | "component" | "residual"
 ################################################################################
 
 config <- list.files("config", pattern = "\\.csv$", full.names = TRUE) %>%
@@ -61,7 +65,7 @@ to_chart_id <- function(x) {
 }
 
 ################################################################################
-# Phase 1 — mock data, transforms, and placeholder chart helpers
+# Phase 1 — mock data and placeholder chart helpers
 ################################################################################
 
 mock_series <- function(n = 120, seed = 1, drift = 0, vol = 0.4) {
@@ -74,15 +78,8 @@ mock_series <- function(n = 120, seed = 1, drift = 0, vol = 0.4) {
   tibble(date = dates, value = round(cumsum(rnorm(n, drift, vol)), 3))
 }
 
-apply_transform <- function(df, transform, frequency = "monthly") {
-  lag_n <- if (frequency == "quarterly") 4L else 12L
-  out <- switch(transform,
-    "periodic" = df %>% mutate(value = value - lag(value, 1)),
-    "yoy"      = df %>% mutate(value = value - lag(value, lag_n)),
-    df
-  )
-  out %>% filter(!is.na(value))
-}
+# Alias — server.R calls apply_transform; canonical definition is in transformations.R
+apply_transform <- apply_standard_transform
 
 # ── Colour palette (shared across single & multi-series) ─────────────────────
 
@@ -145,8 +142,9 @@ placeholder_multiseries_chart <- function(label, df) {
 
 # ── GDP decomposition stacked-bar ─────────────────────────────────────────────
 
-decomp_components <- c("Consumption", "Business Inv.", "Dwelling Inv.", "Government", "Net Trade")
-decomp_palette    <- c("#1565C0", "#42A5F5", "#90CAF9", "#FF8F00", "#EF9A9A")
+decomp_components <- c("Consumption", "Business Investment", "Dwelling Investment",
+                        "Government", "Net Exports", "Inventories & Other")
+decomp_palette    <- c("#1565C0", "#42A5F5", "#90CAF9", "#FF8F00", "#EF9A9A", "#BDBDBD")
 
 # transform = "periodic" → QoQ contributions; "yoy" → rolling annual contributions
 placeholder_decomp_chart <- function(label, seed = 1, transform = "yoy") {
@@ -157,7 +155,7 @@ placeholder_decomp_chart <- function(label, seed = 1, transform = "yoy") {
     floor_date(Sys.Date(), "month"),
     by = "quarter"
   )
-  qoq_means <- c(0.40, 0.12, 0.05, 0.18, 0.05)
+  qoq_means <- c(0.40, 0.12, 0.05, 0.18, 0.05, 0.03)
   means     <- if (transform == "yoy") qoq_means * 4 else qoq_means
   vol       <- if (transform == "yoy") 0.35 else 0.18
 

@@ -17,35 +17,36 @@ server <- function(input, output, session) {
     group_by(chart_id) %>%
     summarise(
       chart_title       = first(chart_title),
-      chart_type        = first(chart_type),
+      transform_type    = first(transform_type),
       frequency         = first(frequency),
       default_transform = first(default_transform),
-      n_series          = n(),
+      # Exclude aggregate row — it is the denominator, not a plotted line
+      n_series          = sum(series_role != "aggregate"),
       .groups = "drop"
     ) %>%
     mutate(seed = row_number() * 13L)
 
   chart_meta %>%
-    purrr::pwalk(function(chart_id, chart_title, chart_type, frequency,
+    purrr::pwalk(function(chart_id, chart_title, transform_type, frequency,
                           default_transform, n_series, seed, ...) {
       local({
         .id          <- chart_id
         .label       <- chart_title
         .seed        <- seed
         .freq        <- frequency
-        .type        <- chart_type
+        .type        <- transform_type
         .default_tfm <- default_transform
         .n           <- n_series
         .tfm         <- paste0(chart_id, "_tfm")
-        # Series names for multi-line legend labels (use .id, not bare chart_id)
+        # Component/series names for legend labels (exclude aggregate row)
         .series      <- config %>%
-          filter(chart_id == .id) %>%
+          filter(chart_id == .id, series_role %in% c("series", "component")) %>%
           pull(series_name)
 
         output[[.id]] <- renderPlotly({
           tfm <- if (is.null(input[[.tfm]])) .default_tfm else input[[.tfm]]
 
-          if (.type == "decomp") {
+          if (.type == "additive_decomp") {
             placeholder_decomp_chart(.label, seed = .seed, transform = tfm)
 
           } else if (.n == 1) {
@@ -53,7 +54,6 @@ server <- function(input, output, session) {
             placeholder_chart(.label, df = df)
 
           } else {
-            # Multiple series: each gets a distinct seed offset for visual variety
             df <- map2_dfr(seq_len(.n), .series, function(i, nm) {
               mock_series(seed = .seed + i) %>%
                 apply_transform(tfm, .freq) %>%

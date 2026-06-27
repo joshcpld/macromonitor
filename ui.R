@@ -15,7 +15,7 @@
 
 chart_with_toggle <- function(id, freq, chart_type, default_tfm = "yoy",
                               height = "265px") {
-  toggle <- if (chart_type == "decomp") {
+  toggle <- if (chart_type == "additive_decomp") {
     div(class = "chart-controls",
         shinyWidgets::radioGroupButtons(
           inputId  = paste0(id, "_tfm"),
@@ -40,7 +40,7 @@ chart_with_toggle <- function(id, freq, chart_type, default_tfm = "yoy",
 
   div(class = "chart-wrapper",
       toggle,
-      plotlyOutput(id, height = if (chart_type == "decomp") "305px" else height))
+      plotlyOutput(id, height = if (chart_type == "additive_decomp") "305px" else height))
 }
 
 # ── Section builder ───────────────────────────────────────────────────────────
@@ -73,7 +73,7 @@ build_section <- function(ctry, pg, sec) {
         column(width, chart_with_toggle(
           id          = cid,
           freq        = cdata$frequency[1],
-          chart_type  = cdata$chart_type[1],
+          chart_type  = cdata$transform_type[1],
           default_tfm = cdata$default_transform[1]
         ))
       })
