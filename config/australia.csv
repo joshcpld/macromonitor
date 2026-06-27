@@ -1,0 +1,22 @@
+page,sub_section,chart_id,chart_title,series_name,api_source,api_code,frequency,chart_type
+Activity,GDP,headline_gdp,Headline GDP,Headline GDP,readabs,5206.0,quarterly,line
+Activity,GDP,gdp_decomp,GDP Growth Decomposition,GDP Growth Decomposition,readabs,5206.0,quarterly,decomp
+Activity,Consumer,retail_turnover,Retail Turnover,Retail Turnover,readabs,8501.0,monthly,line
+Activity,Consumer,real_consumption,Real Household Consumption,Real Household Consumption,readabs,5206.0,quarterly,line
+Activity,Business Investment,capex,Private New Capital Expenditure,Private New Capital Expenditure,readabs,5625.0,quarterly,line
+Activity,Business Investment,business_credit,Business Credit,Business Credit,readrba,D1,monthly,line
+Activity,Dwelling Investment,dwelling_approvals,Dwelling Approvals,Dwelling Approvals,readabs,8731.0,monthly,line
+Activity,Dwelling Investment,housing_finance,Housing Finance,Housing Finance,readabs,5601.0,monthly,line
+Activity,Government,govt_consumption,Government Final Consumption,Government Final Consumption,readabs,5206.0,quarterly,line
+Activity,Government,public_capex,Public Gross Fixed Capital Formation,Public Gross Fixed Capital Formation,readabs,5206.0,quarterly,line
+Activity,Trade,trade_balance,International Trade Balance,International Trade Balance,readabs,5368.0,monthly,line
+Activity,Trade,terms_of_trade,Terms of Trade,Terms of Trade,readabs,5206.0,quarterly,line
+Prices,Inflation,trimmed_mean_cpi,Trimmed Mean CPI,Trimmed Mean CPI,readabs,6401.0,quarterly,line
+Prices,Inflation,headline_cpi,Headline CPI,Headline CPI,readabs,6401.0,quarterly,line
+Prices,Inflation,monthly_cpi,Monthly CPI Indicator,Monthly CPI Indicator,readabs,6484.0,monthly,line
+Prices,Wages,wpi,Wage Price Index,Wage Price Index,readabs,6345.0,quarterly,line
+Labour Market,Labour Force Survey (LFS) Core Data,unemployment_rate,Unemployment Rate,Unemployment Rate,readabs,6202.0,monthly,line
+Labour Market,Labour Force Survey (LFS) Core Data,participation_rate,Participation Rate,Participation Rate,readabs,6202.0,monthly,line
+Labour Market,Labour Force Survey (LFS) Core Data,hours_worked,Monthly Hours Worked,Monthly Hours Worked,readabs,6202.0,monthly,line
+Labour Market,Broader Labour Demand,job_vacancies,ABS Job Vacancies,ABS Job Vacancies,readabs,6354.0,quarterly,line
+Labour Market,Broader Labour Demand,rba_labour,RBA Labour Market Aggregates,RBA Labour Market Aggregates,readrba,G1,quarterly,line

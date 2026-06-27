@@ -1,0 +1,119 @@
+/* =============================================================================
+   Macro Monitor — custom styles
+   Layered on top of bslib's "flatly" Bootstrap 5 theme
+   ============================================================================= */
+
+/* ── Section headers ──────────────────────────────────────────────────────── */
+
+.section-header {
+  padding: 10px 0 6px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.section-header h4 {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #424242;
+  border-left: 3px solid #1565C0;
+  padding-left: 10px;
+}
+
+/* ── Section dividers ────────────────────────────────────────────────────── */
+
+.section-divider {
+  margin: 18px 0 26px;
+  border-top: 1px solid #E8E8E8;
+}
+
+/* ── Chart wrapper: stacks toggle above the Plotly output ────────────────── */
+
+.chart-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+
+/* Toggle sits right-aligned above the chart */
+.chart-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 3px;
+  min-height: 28px;
+}
+
+/* Keep shinyWidgets button group tightly sized */
+.chart-controls .btn-group {
+  box-shadow: none;
+}
+
+.chart-controls .btn-xs,
+.chart-controls .btn-group-xs > .btn {
+  font-size: 0.7rem;
+  padding: 2px 9px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
+
+/* Unselected toggle buttons: white fill, blue border */
+.chart-controls .btn-primary:not(.active) {
+  background-color: #fff;
+  color: #1565C0;
+  border-color: #90CAF9;
+}
+
+.chart-controls .btn-primary:not(.active):hover {
+  background-color: #E3F2FD;
+  border-color: #1565C0;
+}
+
+/* Selected state: solid primary blue */
+.chart-controls .btn-primary.active {
+  background-color: #1565C0;
+  border-color: #1565C0;
+  color: #fff;
+}
+
+/* ── LHS pill navigation ─────────────────────────────────────────────────── */
+
+.nav-pills.flex-column .nav-link {
+  font-size: 0.88rem;
+  color: #424242;
+  border-radius: 4px;
+  padding: 0.45rem 1rem;
+  margin-bottom: 2px;
+  transition: background-color 0.15s ease;
+}
+
+.nav-pills.flex-column .nav-link:hover {
+  background-color: #E3F2FD;
+  color: #1565C0;
+}
+
+.nav-pills.flex-column .nav-link.active {
+  background-color: #1565C0;
+  color: #fff;
+}
+
+/* ── Tab content area ────────────────────────────────────────────────────── */
+
+.tab-content {
+  padding-top: 4px;
+}
+
+/* ── Navbar title ────────────────────────────────────────────────────────── */
+
+.navbar-brand {
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+/* ── Subtle chart card shadow ────────────────────────────────────────────── */
+
+.plotly.html-widget {
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07);
+}
