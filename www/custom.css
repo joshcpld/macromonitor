@@ -37,44 +37,82 @@
   margin-bottom: 12px;
 }
 
-/* Toggle sits right-aligned above the chart */
+/* Controls bar: y-axis inputs on the left, transform toggle on the right */
 .chart-controls {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 3px;
   min-height: 28px;
 }
 
-/* Keep shinyWidgets button group tightly sized */
-.chart-controls .btn-group {
-  box-shadow: none;
+/* ── Y-axis range inputs ─────────────────────────────────────────────────── */
+
+.yaxis-controls {
+  display: flex;
+  align-items: center;
+  gap: 3px;
 }
 
-.chart-controls .btn-xs,
-.chart-controls .btn-group-xs > .btn {
-  font-size: 0.7rem;
-  padding: 2px 9px;
-  line-height: 1.5;
-  border-radius: 3px;
+.yaxis-controls .yaxis-label {
+  font-size: 0.68rem;
+  color: #aaa;
+  margin: 0;
+  user-select: none;
 }
 
-/* Unselected toggle buttons: white fill, blue border */
-.chart-controls .btn-primary:not(.active) {
-  background-color: #fff;
-  color: #1565C0;
-  border-color: #90CAF9;
+/* Remove Shiny's default bottom margin on the input wrapper */
+.yaxis-controls .form-group {
+  margin-bottom: 0 !important;
 }
 
-.chart-controls .btn-primary:not(.active):hover {
-  background-color: #E3F2FD;
-  border-color: #1565C0;
+/* Compact text input */
+.yaxis-controls input.form-control {
+  height:        22px    !important;
+  font-size:     0.68rem !important;
+  padding:       1px 5px !important;
+  border-radius: 3px     !important;
+  border-color:  #d0d7de !important;
+  color:         #555    !important;
+  box-shadow:    none    !important;
 }
 
-/* Selected state: solid primary blue */
-.chart-controls .btn-primary.active {
+.yaxis-controls input.form-control:focus {
+  border-color: #90CAF9 !important;
+  box-shadow:   0 0 0 2px rgba(21,101,192,0.15) !important;
+}
+
+/* ── Transform toggle buttons (plain HTML — no shinyWidgets dependency) ──── */
+
+.tfm-group {
+  display: flex;
+  gap: 2px;
+}
+
+.tfm-btn {
+  font-size:        0.7rem;
+  padding:          2px 9px;
+  line-height:      1.5;
+  border-radius:    3px;
+  border:           1px solid #d0d7de;
+  background-color: #f4f6f8;
+  color:            #555;
+  cursor:           pointer;
+  font-weight:      400;
+  outline:          none;
+}
+
+.tfm-btn.tfm-active {
   background-color: #1565C0;
-  border-color: #1565C0;
-  color: #fff;
+  border-color:     #1565C0;
+  color:            #fff;
+  font-weight:      600;
+}
+
+.tfm-btn:hover:not(.tfm-active) {
+  background-color: #E3F2FD;
+  border-color:     #90CAF9;
+  color:            #1565C0;
 }
 
 /* ── LHS pill navigation ─────────────────────────────────────────────────── */
@@ -116,4 +154,49 @@
 .plotly.html-widget {
   border-radius: 4px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07);
+}
+
+/* ── Chart loading spinner (Shiny's built-in .recalculating class) ────────── */
+
+/* Dim the chart while re-rendering */
+.shiny-plot-output.recalculating {
+  opacity: 0.25;
+  transition: opacity 0.2s ease;
+}
+
+/* Spinner centred over the dimmed chart */
+.chart-wrapper {
+  position: relative;
+}
+
+.chart-wrapper:has(.shiny-plot-output.recalculating)::after {
+  content:          "";
+  position:         absolute;
+  top:              50%;
+  left:             50%;
+  width:            28px;
+  height:           28px;
+  margin:           -14px 0 0 -14px;
+  border:           3px solid #E3F2FD;
+  border-top-color: #1565C0;
+  border-radius:    50%;
+  animation:        mm-spin 0.7s linear infinite;
+  z-index:          10;
+  pointer-events:   none;
+}
+
+@keyframes mm-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Refresh button pulse while Shiny is busy ────────────────────────────── */
+
+/* body.shiny-busy is added by Shiny whenever any reactive is computing */
+body.shiny-busy #refresh_data {
+  animation: mm-pulse-btn 1s ease-in-out infinite;
+}
+
+@keyframes mm-pulse-btn {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
 }

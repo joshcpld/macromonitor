@@ -1,0 +1,11 @@
+# R session artefacts
+.Rhistory
+.RData
+.Rproj.user/
+
+# Cached data (regenerated via Refresh Data button)
+data/
+
+# OS
+.DS_Store
+Thumbs.db

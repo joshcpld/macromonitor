@@ -10,8 +10,14 @@ library(shinyWidgets)
 library(tidyverse)
 library(lubridate)
 
-# Transformation definitions and Phase 3 implementation stubs
+# Transformation definitions and contribution chart helpers
 source("R/transformations.R")
+
+# Data ingestion: refresh_data(), load_cache(), cache_last_updated()
+source("R/ingestion.R")
+
+# Live chart builders: live_chart(), live_decomp_chart()
+source("R/charts.R")
 
 ################################################################################
 # Configuration
@@ -68,6 +74,35 @@ to_chart_id <- function(x) {
 # Phase 1 — mock data and placeholder chart helpers
 ################################################################################
 
+# Range-selector config reused by all placeholder charts
+.placeholder_rs <- list(
+  buttons = list(
+    list(count = 1,  label = "1Y",  step = "year", stepmode = "backward"),
+    list(count = 2,  label = "2Y",  step = "year", stepmode = "backward"),
+    list(count = 3,  label = "3Y",  step = "year", stepmode = "backward"),
+    list(count = 4,  label = "4Y",  step = "year", stepmode = "backward"),
+    list(count = 5,  label = "5Y",  step = "year", stepmode = "backward"),
+    list(count = 10, label = "10Y", step = "year", stepmode = "backward"),
+    list(step = "all", label = "Max")
+  ),
+  bgcolor     = "#ffffff",
+  bordercolor = "#90CAF9",
+  borderwidth = 1,
+  font        = list(size = 10, color = "#424242"),
+  activecolor = "#1565C0",
+  x           = 0,
+  y           = 1.04,
+  xanchor     = "left",
+  yanchor     = "bottom"
+)
+
+# Helper: build a yaxis list with an optional user-supplied range
+.ph_yaxis <- function(..., y_range = NULL) {
+  cfg <- list(...)
+  if (!is.null(y_range)) cfg$range <- y_range
+  cfg
+}
+
 mock_series <- function(n = 120, seed = 1, drift = 0, vol = 0.4) {
   set.seed(seed)
   dates <- seq(
@@ -87,7 +122,7 @@ series_colours <- c("#1565C0", "#FF8F00", "#43A047", "#E53935", "#8E24AA", "#00A
 
 # ── Single-series line chart ──────────────────────────────────────────────────
 
-placeholder_chart <- function(label, df = NULL, seed = 1) {
+placeholder_chart <- function(label, df = NULL, seed = 1, y_range = NULL) {
   if (is.null(df)) df <- mock_series(seed = seed)
 
   plot_ly(
@@ -100,13 +135,16 @@ placeholder_chart <- function(label, df = NULL, seed = 1) {
     layout(
       title         = list(text = label, font = list(size = 13, color = "#212121"),
                            x = 0.02, y = 0.97),
-      xaxis         = list(title = "", showgrid = FALSE, zeroline = FALSE),
-      yaxis         = list(title = "", gridcolor = "#EEEEEE", zeroline = FALSE,
-                           tickfont = list(size = 11)),
+      xaxis         = list(title = "", showgrid = FALSE, zeroline = FALSE,
+                           rangeselector = .placeholder_rs),
+      yaxis         = .ph_yaxis(title = "", gridcolor = "#EEEEEE", zeroline = FALSE,
+                                tickfont = list(size = 11), fixedrange = FALSE,
+                                y_range = y_range),
+      uirevision    = "static",
       plot_bgcolor  = "#FAFAFA",
       paper_bgcolor = "white",
       hovermode     = "x unified",
-      margin        = list(l = 45, r = 15, t = 38, b = 30)
+      margin        = list(l = 45, r = 15, t = 52, b = 30)
     ) %>%
     config(displayModeBar = FALSE)
 }
@@ -114,7 +152,7 @@ placeholder_chart <- function(label, df = NULL, seed = 1) {
 # ── Multi-series line chart ───────────────────────────────────────────────────
 # df must have columns: date, value, series (factor or character)
 
-placeholder_multiseries_chart <- function(label, df) {
+placeholder_multiseries_chart <- function(label, df, y_range = NULL) {
   n_s <- n_distinct(df$series)
 
   plot_ly(
@@ -128,14 +166,17 @@ placeholder_multiseries_chart <- function(label, df) {
     layout(
       title         = list(text = label, font = list(size = 13, color = "#212121"),
                            x = 0.02, y = 0.97),
-      xaxis         = list(title = "", showgrid = FALSE, zeroline = FALSE),
-      yaxis         = list(title = "", gridcolor = "#EEEEEE", zeroline = FALSE,
-                           tickfont = list(size = 11)),
+      xaxis         = list(title = "", showgrid = FALSE, zeroline = FALSE,
+                           rangeselector = .placeholder_rs),
+      yaxis         = .ph_yaxis(title = "", gridcolor = "#EEEEEE", zeroline = FALSE,
+                                tickfont = list(size = 11), fixedrange = FALSE,
+                                y_range = y_range),
       legend        = list(orientation = "h", y = -0.2, font = list(size = 11)),
+      uirevision    = "static",
       plot_bgcolor  = "#FAFAFA",
       paper_bgcolor = "white",
       hovermode     = "x unified",
-      margin        = list(l = 45, r = 15, t = 38, b = 55)
+      margin        = list(l = 45, r = 15, t = 52, b = 55)
     ) %>%
     config(displayModeBar = FALSE)
 }
@@ -147,7 +188,7 @@ decomp_components <- c("Consumption", "Business Investment", "Dwelling Investmen
 decomp_palette    <- c("#1565C0", "#42A5F5", "#90CAF9", "#FF8F00", "#EF9A9A", "#BDBDBD")
 
 # transform = "periodic" → QoQ contributions; "yoy" → rolling annual contributions
-placeholder_decomp_chart <- function(label, seed = 1, transform = "yoy") {
+placeholder_decomp_chart <- function(label, seed = 1, transform = "yoy", y_range = NULL) {
   set.seed(seed)
   n_q   <- 40
   dates <- seq(
@@ -177,14 +218,17 @@ placeholder_decomp_chart <- function(label, seed = 1, transform = "yoy") {
       barmode       = "relative",
       title         = list(text = label, font = list(size = 13, color = "#212121"),
                            x = 0.02, y = 0.97),
-      xaxis         = list(title = "", showgrid = FALSE, zeroline = FALSE),
-      yaxis         = list(title = ytitle, gridcolor = "#EEEEEE", zeroline = TRUE,
-                           zerolinecolor = "#BDBDBD", tickfont = list(size = 11)),
+      xaxis         = list(title = "", showgrid = FALSE, zeroline = FALSE,
+                           rangeselector = .placeholder_rs),
+      yaxis         = .ph_yaxis(title = ytitle, gridcolor = "#EEEEEE", zeroline = TRUE,
+                                zerolinecolor = "#BDBDBD", tickfont = list(size = 11),
+                                fixedrange = FALSE, y_range = y_range),
+      uirevision    = "static",
       plot_bgcolor  = "#FAFAFA",
       paper_bgcolor = "white",
       legend        = list(orientation = "h", y = -0.22, font = list(size = 11),
                            traceorder = "normal"),
-      margin        = list(l = 55, r = 15, t = 38, b = 65),
+      margin        = list(l = 55, r = 15, t = 52, b = 65),
       hovermode     = "x unified"
     ) %>%
     config(displayModeBar = FALSE)

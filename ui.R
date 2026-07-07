@@ -11,35 +11,45 @@
 # Row order in the CSV = display order everywhere.
 ################################################################################
 
+# ── Custom transform toggle (plain HTML — bypasses Bootstrap 5 CSS wars) ─────
+# Uses Shiny.setInputValue to update the reactive input directly from JS.
+
+tfm_toggle <- function(input_id, choices, selected) {
+  btns <- mapply(function(val, lab) {
+    tags$button(
+      class            = paste("tfm-btn", if (val == selected) "tfm-active" else ""),
+      type             = "button",
+      `data-tfm-input` = input_id,
+      `data-tfm-value` = val,
+      lab
+    )
+  }, unname(choices), names(choices), SIMPLIFY = FALSE, USE.NAMES = FALSE)
+  do.call(div, c(list(class = "tfm-group"), btns))
+}
+
 # ── Chart cell: toggle + plotly output ───────────────────────────────────────
 
 chart_with_toggle <- function(id, freq, chart_type, default_tfm = "yoy",
                               height = "265px") {
-  toggle <- if (chart_type == "additive_decomp") {
-    div(class = "chart-controls",
-        shinyWidgets::radioGroupButtons(
-          inputId  = paste0(id, "_tfm"),
-          label    = NULL,
-          choices  = c("QoQ" = "periodic", "YoY" = "yoy"),
-          selected = default_tfm,
-          size     = "xs", status = "primary"
-        ))
+  choices <- if (chart_type == "additive_decomp") {
+    c("QoQ" = "periodic", "YoY" = "yoy")
   } else {
     periodic_label <- if (freq == "quarterly") "QoQ" else "MoM"
-    choices        <- setNames(c("level", "periodic", "yoy"),
-                               c("Level", periodic_label, "YoY"))
-    div(class = "chart-controls",
-        shinyWidgets::radioGroupButtons(
-          inputId  = paste0(id, "_tfm"),
-          label    = NULL,
-          choices  = choices,
-          selected = default_tfm,
-          size     = "xs", status = "primary"
-        ))
+    setNames(c("level", "periodic", "yoy"), c("Level", periodic_label, "YoY"))
   }
 
+  toggle  <- tfm_toggle(paste0(id, "_tfm"), choices, default_tfm)
+
+  # Y-axis range inputs (left side of controls bar)
+  y_controls <- div(
+    class = "yaxis-controls",
+    tags$span("Y:", class = "yaxis-label"),
+    textInput(paste0(id, "_ymin"), label = NULL, placeholder = "min", width = "56px"),
+    textInput(paste0(id, "_ymax"), label = NULL, placeholder = "max", width = "56px")
+  )
+
   div(class = "chart-wrapper",
-      toggle,
+      div(class = "chart-controls", y_controls, toggle),
       plotlyOutput(id, height = if (chart_type == "additive_decomp") "305px" else height))
 }
 
@@ -56,12 +66,12 @@ build_section <- function(ctry, pg, sec) {
     width <- if (n == 1) 12L else if (n == 2) 6L else 4L
     cells <- lapply(chart_ids, function(cid) {
       cdata <- sec_cfg %>% filter(chart_id == cid)
-      column(width, chart_with_toggle(
-        id          = cid,
-        freq        = cdata$frequency[1],
-        chart_type  = cdata$chart_type[1],
-        default_tfm = cdata$default_transform[1]
-      ))
+        column(width, chart_with_toggle(
+          id          = cid,
+          freq        = cdata$frequency[1],
+          chart_type  = cdata$transform_type[1],
+          default_tfm = cdata$default_transform[1]
+        ))
     })
     list(do.call(fluidRow, cells))
   } else {
@@ -123,13 +133,33 @@ build_country_tab <- function(ctry) {
 countries <- config %>% pull(country) %>% unique()
 
 ui <- tagList(
-  tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")),
+  tags$head(
+    tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
+    tags$script(src = "toggle-highlight.js")
+  ),
 
   do.call(page_navbar, c(
     list(
       title = "Macro Monitor",
       id    = "top_nav",
-      theme = bs_theme(bootswatch = "flatly", primary = "#1565C0")
+      theme = bs_theme(bootswatch = "flatly", primary = "#1565C0"),
+      # Refresh button + last-updated timestamp pinned to the right of the navbar
+      nav_item(
+        div(
+          style = "display:flex; align-items:center; gap:10px; padding-right:6px;",
+          actionButton(
+            "refresh_data",
+            label = NULL,
+            icon  = icon("rotate"),
+            class = "btn btn-outline-light btn-sm",
+            title = "Refresh data from ABS / RBA"
+          ),
+          textOutput("last_updated_text", inline = TRUE) %>%
+            tagAppendAttributes(
+              style = "color:rgba(255,255,255,0.7); font-size:0.75rem; white-space:nowrap;"
+            )
+        )
+      )
     ),
     lapply(countries, build_country_tab)
   ))
