@@ -8,21 +8,21 @@ Activity,GDP,gdp_decomp,GDP Growth Decomposition,Government,readabs,5206.0,2,A23
 Activity,GDP,gdp_decomp,GDP Growth Decomposition,Exports,readabs,5206.0,2,A2304114F,Exports of goods and services,quarterly,additive_decomp,component
 Activity,GDP,gdp_decomp,GDP Growth Decomposition,Imports,readabs,5206.0,2,A2304115J,Imports of goods and services,quarterly,additive_decomp,component_imports
 Activity,GDP,gdp_decomp,GDP Growth Decomposition,Inventories & Other,,,,,,quarterly,additive_decomp,residual
-Activity,Consumer,retail_turnover,Retail Turnover,Retail Turnover,readabs,8501.0,11,,Turnover ; Total,monthly,standard,series
+Activity,Consumer,household_spending,Household Spending,Monthly Household Spending,readabs,5682.0,1,A130200584T,All household spending,monthly,standard,series
 Activity,Consumer,real_consumption,Real Household Consumption,Real Household Consumption,readabs,5206.0,2,A2304081W,Households ; Final consumption expenditure,quarterly,standard,series
 Activity,Business Investment,capex,Private New Capital Expenditure,Private New Capital Expenditure,readabs,5625.0,2,,Total new capital expenditure,quarterly,standard,series
 Activity,Business Investment,business_credit,Business Credit,Business Credit,readrba,D1,,,Business credit,monthly,standard,series
-Activity,Dwelling Investment,dwelling_approvals,Dwelling Approvals,Dwelling Approvals,readabs,8731.0,1,,Total dwellings,monthly,standard,series
+Activity,Dwelling Investment,building_activity,Building Activity,Building Activity,readabs,8752.0,1,A83778211X,Total activity ; Total sectors,quarterly,standard,series
 Activity,Dwelling Investment,housing_finance,Housing Finance,Housing Finance,readabs,5601.0,1,A130268891F,Total dwellings excluding refinancing ; New loan commitments ; Value,monthly,standard,series
 Activity,Government,govt_consumption,Government Final Consumption,Government Final Consumption,readabs,5206.0,2,A2304080V,General government ; Final consumption expenditure,quarterly,standard,series
 Activity,Government,public_capex,Public Gross Fixed Capital Formation,Public Gross Fixed Capital Formation,readabs,5206.0,2,A2304109L,Public ; Gross fixed capital formation,quarterly,standard,series
 Activity,Trade,trade_balance,International Trade Balance,International Trade Balance,readabs,5368.0,1,A2718594C,Balance on goods,monthly,standard,series
 Activity,Trade,terms_of_trade,Terms of Trade,Terms of Trade,readabs,5206.0,1,A2304200A,Terms of trade: Index,quarterly,standard,series
-Prices,Inflation,trimmed_mean_cpi,Trimmed Mean CPI,Trimmed Mean CPI,readabs,6401.0,3,,Trimmed mean,quarterly,standard,series
+Prices,Inflation,trimmed_mean_cpi,Trimmed Mean CPI,Trimmed Mean CPI,readabs,6401.0,3,A130400381L,Trimmed mean,quarterly,standard,series
 Prices,Inflation,headline_cpi,Headline CPI,Headline CPI,readabs,6401.0,2,A130393720C,All groups CPI ; Australia,quarterly,standard,series
 Prices,Inflation,monthly_cpi,Monthly CPI Indicator,Monthly CPI Indicator,readabs,6484.0,1,A128481587A,All groups CPI seasonally adjusted ; Australia,monthly,standard,series
 Prices,Wages,wpi,Wage Price Index,Wage Price Index,readabs,6345.0,1,A2713846W,Total hourly rates of pay excluding bonuses,quarterly,standard,series
 Labour Market,Labour Force Survey (LFS) Core Data,unemployment_rate,Unemployment Rate,Unemployment Rate,readabs,6202.0,1,A84423050A,Unemployment rate ; Persons,monthly,standard,series
 Labour Market,Labour Force Survey (LFS) Core Data,participation_rate,Participation Rate,Participation Rate,readabs,6202.0,1,A84423051C,Participation rate ; Persons,monthly,standard,series
 Labour Market,Labour Force Survey (LFS) Core Data,hours_worked,Monthly Hours Worked,Monthly Hours Worked,readabs,6202.0,1,A84426277X,Monthly hours worked in all jobs ; Persons,monthly,standard,series
-Labour Market,Broader Labour Demand,job_vacancies,ABS Job Vacancies,ABS Job Vacancies,readabs,6354.0,1,,Job vacancies,quarterly,standard,series
+Labour Market,Broader Labour Demand,job_vacancies,ABS Job Vacancies,ABS Job Vacancies,readabs,6354.0,1,A590698F,Job vacancies ; Total,quarterly,standard,series
