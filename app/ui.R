@@ -134,9 +134,9 @@ countries <- config %>% pull(country) %>% unique()
 
 ui <- tagList(
   tags$head(
-    tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
-    tags$script(src = "toggle-highlight.js"),
-    tags$script(src = "autoscale-y.js")
+    tags$link(rel = "stylesheet", type = "text/css", href = "assets/custom.css"),
+    tags$script(src = "assets/toggle-highlight.js"),
+    tags$script(src = "assets/autoscale-y.js")
   ),
 
   do.call(page_navbar, c(

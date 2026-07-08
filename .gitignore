@@ -5,7 +5,7 @@
 .Rproj.user/
 
 # Cached data (regenerated via Refresh Data button)
-app/data/
+data/
 
 # OS
 .DS_Store

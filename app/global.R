@@ -11,13 +11,16 @@ library(tidyverse)
 library(lubridate)
 
 # Transformation definitions and contribution chart helpers
-source("R/transformations.R")
+source("../r/transformations.R")
 
 # Data ingestion: refresh_data(), load_cache(), cache_last_updated()
-source("R/ingestion.R")
+source("../r/ingestion.R")
 
 # Live chart builders: live_chart(), live_decomp_chart()
-source("R/charts.R")
+source("../r/charts.R")
+
+# Serve www/ (at repo root) as static assets under the /assets/ URL prefix
+addResourcePath("assets", "../www")
 
 ################################################################################
 # Configuration
@@ -39,7 +42,7 @@ source("R/charts.R")
 #   series_role     — "series" | "aggregate" | "component" | "residual"
 ################################################################################
 
-config <- list.files("config", pattern = "\\.csv$", full.names = TRUE) %>%
+config <- list.files("../config", pattern = "\\.csv$", full.names = TRUE) %>%
   map_dfr(function(path) {
     # Derive tab label from filename: "01_australia.csv" → "Australia", "us.csv" → "US"
     country_name <- basename(path) %>%

@@ -13,7 +13,7 @@ server <- function(input, output, session) {
   # re-renders every chart that calls live_data().
   ################################################################################
 
-  live_data <- reactiveVal(load_cache())
+  live_data <- reactiveVal(load_cache(cache_dir = "../data"))
 
   # Refresh button — downloads fresh data from ABS/RBA, then reloads the cache
   observeEvent(input$refresh_data, {
@@ -23,8 +23,8 @@ server <- function(input, output, session) {
       footer = NULL
     ))
     tryCatch({
-      refresh_data()
-      live_data(load_cache())
+      refresh_data(cache_dir = "../data")
+      live_data(load_cache(cache_dir = "../data"))
       removeModal()
       showNotification("Data updated successfully.", type = "message", duration = 5)
     }, error = function(e) {
@@ -37,7 +37,7 @@ server <- function(input, output, session) {
   # "Last updated" timestamp displayed in navbar
   output$last_updated_text <- renderText({
     live_data()   # establish reactive dependency
-    ts <- cache_last_updated()
+    ts <- cache_last_updated(cache_dir = "../data")
     if (ts == "Never") "No data cached" else paste("Updated:", ts)
   })
 
