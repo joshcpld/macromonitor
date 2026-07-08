@@ -6,6 +6,14 @@
 # series for that country.  load_cache() reads these files and splits the data
 # by chart_id so the server can access each chart's data as a named list.
 #
+# Supported api_source values:
+#   readabs  — ABS catalogue data (series_id preferred; falls back to cat_no+filter)
+#   readrba  — RBA statistical tables (requires readrba package)
+#   fredr    — FRED via api_code = FRED series ID (requires fredr + FRED_API_KEY)
+#
+# FRED setup: register for a free key at https://fred.stlouisfed.org/docs/api/api_key.html
+#   then run: fredr::fredr_set_key("your_key")  OR set env var FRED_API_KEY.
+#
 # Public functions:
 #   refresh_data()       — downloads all series, writes data/<country>.csv
 #   load_cache()         — reads country CSVs, returns named list by chart_id
@@ -13,6 +21,37 @@
 ################################################################################
 
 library(readabs)
+
+# ─── Internal: fetch a single FRED series ────────────────────────────────────
+
+.fetch_fred <- function(row) {
+  if (!requireNamespace("fredr", quietly = TRUE)) {
+    message("  fredr not installed — skipping ", row$chart_id,
+            "\n  Install with: install.packages('fredr')")
+    return(NULL)
+  }
+  key <- Sys.getenv("FRED_API_KEY")
+  if (nchar(key) == 0) {
+    message("  FRED_API_KEY not set — skipping ", row$api_code,
+            "\n  Run: fredr::fredr_set_key('your_key')")
+    return(NULL)
+  }
+  message("  Fetching FRED series ", row$api_code, " for ", row$chart_id, "...")
+  df <- tryCatch(
+    fredr::fredr(series_id = row$api_code),
+    error = function(e) { message("    ERROR: ", conditionMessage(e)); NULL }
+  )
+  if (is.null(df) || nrow(df) == 0) return(NULL)
+  df %>%
+    select(date, value) %>%
+    filter(!is.na(value)) %>%
+    mutate(
+      series_name = row$series_name,
+      series_role = row$series_role,
+      chart_id    = row$chart_id,
+      country     = row$country
+    )
+}
 
 # ─── Internal: fetch a single fallback row (no series_id) ────────────────────
 
@@ -149,10 +188,23 @@ refresh_data <- function(cfg = config, cache_dir = "data") {
   }
 
   ##############################################################################
-  # 4. Combine and write ONE CSV per country
+  # 4. fredr (FRED — Federal Reserve Economic Data)
   ##############################################################################
 
-  all_data <- bind_rows(id_data, fallback_data, rba_data)
+  fred_rows <- rows %>% filter(api_source == "fredr", !is.na(api_code), api_code != "")
+
+  fred_data <- if (nrow(fred_rows) > 0) {
+    message("Fetching ", nrow(fred_rows), " series from FRED...")
+    map_dfr(split(fred_rows, seq_len(nrow(fred_rows))), .fetch_fred)
+  } else {
+    tibble()
+  }
+
+  ##############################################################################
+  # 5. Combine and write ONE CSV per country
+  ##############################################################################
+
+  all_data <- bind_rows(id_data, fallback_data, rba_data, fred_data)
 
   if (nrow(all_data) == 0) {
     message("No data fetched — nothing cached.")

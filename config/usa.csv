@@ -1,0 +1,31 @@
+page,sub_section,chart_id,chart_title,series_name,api_source,api_code,table_no,series_id,series_filter,frequency,transform_type,series_role
+Activity,GDP,headline_gdp_us,Headline GDP,Real GDP,fredr,GDPC1,,,,quarterly,standard,series
+Activity,GDP,gdp_decomp_us,GDP Growth Decomposition,Real GDP,fredr,GDPC1,,,,quarterly,additive_decomp,aggregate
+Activity,GDP,gdp_decomp_us,GDP Growth Decomposition,Consumption,fredr,PCECC96,,,,quarterly,additive_decomp,component
+Activity,GDP,gdp_decomp_us,GDP Growth Decomposition,Business Investment,fredr,PNFIC1,,,,quarterly,additive_decomp,component
+Activity,GDP,gdp_decomp_us,GDP Growth Decomposition,Residential Investment,fredr,PRFIC1,,,,quarterly,additive_decomp,component
+Activity,GDP,gdp_decomp_us,GDP Growth Decomposition,Government,fredr,GCEC1,,,,quarterly,additive_decomp,component
+Activity,GDP,gdp_decomp_us,GDP Growth Decomposition,Exports,fredr,EXPGSC1,,,,quarterly,additive_decomp,component
+Activity,GDP,gdp_decomp_us,GDP Growth Decomposition,Imports,fredr,IMPGSC1,,,,quarterly,additive_decomp,component_imports
+Activity,GDP,gdp_decomp_us,GDP Growth Decomposition,Inventories & Other,,,,,,quarterly,additive_decomp,residual
+Activity,Consumer,real_pce_us,Real Personal Consumption,Real PCE,fredr,PCEC96,,,,monthly,standard,series
+Activity,Consumer,retail_sales_us,Retail Sales ex Autos,Retail Sales ex Autos,fredr,RSXFS,,,,monthly,standard,series
+Activity,Business Investment,nonres_investment_us,Private Nonresidential Investment,Private Nonresidential Investment,fredr,PNFIC1,,,,quarterly,standard,series
+Activity,Business Investment,business_credit_us,Commercial & Industrial Loans,Commercial & Industrial Loans,fredr,BUSLOANS,,,,monthly,standard,series
+Activity,Dwelling Investment,res_investment_us,Residential Fixed Investment,Residential Fixed Investment,fredr,PRFIC1,,,,quarterly,standard,series
+Activity,Dwelling Investment,housing_starts_us,Housing Starts,Housing Starts,fredr,HOUST,,,,monthly,standard,series
+Activity,Government,govt_spending_us,Government Consumption & Investment,Government Consumption & Investment,fredr,GCEC1,,,,quarterly,standard,series
+Activity,Government,federal_expenditures_us,Federal Government Expenditures,Federal Government Expenditures,fredr,FGEXPND,,,,quarterly,standard,series
+Activity,Trade,trade_balance_us,Trade Balance,Trade Balance,fredr,BOPGSTB,,,,monthly,standard,series
+Activity,Trade,industrial_production_us,Industrial Production,Industrial Production,fredr,INDPRO,,,,monthly,standard,series
+Prices,Inflation,cpi_us,CPI,Headline,fredr,CPIAUCSL,,,,monthly,standard,series
+Prices,Inflation,cpi_us,CPI,Core,fredr,CPILFESL,,,,monthly,standard,series
+Prices,Inflation,pce_us,PCE Inflation,Core PCE,fredr,PCEPILFE,,,,monthly,standard,series
+Prices,Inflation,pce_us,PCE Inflation,Headline PCE,fredr,PCEPI,,,,monthly,standard,series
+Prices,Wages,eci_us,Employment Cost Index,Employment Cost Index,fredr,ECIWAG,,,,quarterly,standard,series
+Prices,Wages,ahe_us,Average Hourly Earnings,Average Hourly Earnings,fredr,CES0500000003,,,,monthly,standard,series
+Labour Market,Labour Force Survey Core Data,unemployment_rate_us,Unemployment Rate,Unemployment Rate,fredr,UNRATE,,,,monthly,standard,series
+Labour Market,Labour Force Survey Core Data,participation_rate_us,Participation Rate,Participation Rate,fredr,CIVPART,,,,monthly,standard,series
+Labour Market,Labour Force Survey Core Data,nonfarm_payrolls_us,Nonfarm Payrolls,Total,fredr,PAYEMS,,,,monthly,standard,series
+Labour Market,Labour Force Survey Core Data,nonfarm_payrolls_us,Nonfarm Payrolls,Private,fredr,USPRIV,,,,monthly,standard,series
+Labour Market,Broader Labour Demand,jolts_us,Job Openings (JOLTS),Job Openings,fredr,JTSJOL,,,,monthly,standard,series
