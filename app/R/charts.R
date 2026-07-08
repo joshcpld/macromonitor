@@ -20,6 +20,7 @@
     list(count = 20, label = "20Y", step = "year", stepmode = "backward"),
     list(step = "all", label = "Max")
   ),
+  active      = 6L,   # 0-based: highlights 20Y button on first render
   bgcolor     = "#ffffff",
   bordercolor = "#90CAF9",
   borderwidth = 1,
@@ -56,6 +57,10 @@
 # ─── live_chart() ────────────────────────────────────────────────────────────
 
 live_chart <- function(df, tfm, frequency, label, y_range = NULL) {
+  # uirevision keyed on the max date of the raw data: changes when new data
+  # is loaded (resets zoom to 20Y default), stable across transform toggles
+  ui_rev <- format(max(df$date))
+
   df_plot <- df %>%
     dplyr::group_by(series_name) %>%
     dplyr::group_modify(~apply_standard_transform(.x, tfm, frequency)) %>%
@@ -97,7 +102,7 @@ live_chart <- function(df, tfm, frequency, label, y_range = NULL) {
 
   base %>%
     plotly::layout(
-      uirevision    = "static",   # preserves zoom/range when transform changes
+      uirevision    = ui_rev,     # preserves zoom/range when transform changes
       title         = list(text = label, font = list(size = 13, color = "#212121"),
                            x = 0.02, y = 0.97),
       xaxis         = list(title = "", showgrid = FALSE, zeroline = FALSE,
@@ -117,6 +122,7 @@ live_chart <- function(df, tfm, frequency, label, y_range = NULL) {
 # ─── live_decomp_chart() ─────────────────────────────────────────────────────
 
 live_decomp_chart <- function(df_all, tfm, label, y_range = NULL) {
+  ui_rev     <- format(max(df_all$date))
   df_contrib <- apply_additive_decomp(df_all, transform = tfm)
   if (nrow(df_contrib) == 0) return(plotly::plot_ly())
 
@@ -153,7 +159,7 @@ live_decomp_chart <- function(df_all, tfm, label, y_range = NULL) {
       hovertemplate = "%{x|%b %Y}:  %{y:.2f}%<extra>GDP</extra>"
     ) %>%
     plotly::layout(
-      uirevision    = "static",   # preserves zoom/range when transform changes
+      uirevision    = ui_rev,     # preserves zoom/range when transform changes
       barmode       = "relative",
       title         = list(text = label, font = list(size = 13, color = "#212121"),
                            x = 0.02, y = 0.97),

@@ -41,12 +41,12 @@ source("R/charts.R")
 
 config <- list.files("config", pattern = "\\.csv$", full.names = TRUE) %>%
   map_dfr(function(path) {
-    # Derive tab label from filename: "01_australia.csv" → "Australia"
+    # Derive tab label from filename: "01_australia.csv" → "Australia", "us.csv" → "US"
     country_name <- basename(path) %>%
       str_remove("\\.csv$") %>%
       str_remove("^[0-9]+_?") %>%
       str_replace_all("_", " ") %>%
-      str_to_title()
+      { if (nchar(.) <= 3) toupper(.) else str_to_title(.) }
 
     read_csv(path, show_col_types = FALSE) %>%
       mutate(country = country_name)
@@ -110,7 +110,8 @@ mock_series <- function(n = 120, seed = 1, drift = 0, vol = 0.4) {
     floor_date(Sys.Date(), "month"),
     by = "month"
   )
-  tibble(date = dates, value = round(cumsum(rnorm(n, drift, vol)), 3))
+  # Start at 100 so the random walk never crosses zero (avoids ±∞ % changes)
+  tibble(date = dates, value = round(100 + cumsum(rnorm(n, drift, vol)), 3))
 }
 
 # Alias — server.R calls apply_transform; canonical definition is in transformations.R
@@ -140,7 +141,7 @@ placeholder_chart <- function(label, df = NULL, seed = 1, y_range = NULL) {
       yaxis         = .ph_yaxis(title = "", gridcolor = "#EEEEEE", zeroline = FALSE,
                                 tickfont = list(size = 11), fixedrange = FALSE,
                                 y_range = y_range),
-      uirevision    = "static",
+      uirevision    = "placeholder",
       plot_bgcolor  = "#FAFAFA",
       paper_bgcolor = "white",
       hovermode     = "x unified",
@@ -172,7 +173,7 @@ placeholder_multiseries_chart <- function(label, df, y_range = NULL) {
                                 tickfont = list(size = 11), fixedrange = FALSE,
                                 y_range = y_range),
       legend        = list(orientation = "h", y = -0.2, font = list(size = 11)),
-      uirevision    = "static",
+      uirevision    = "placeholder",
       plot_bgcolor  = "#FAFAFA",
       paper_bgcolor = "white",
       hovermode     = "x unified",
@@ -223,7 +224,7 @@ placeholder_decomp_chart <- function(label, seed = 1, transform = "yoy", y_range
       yaxis         = .ph_yaxis(title = ytitle, gridcolor = "#EEEEEE", zeroline = TRUE,
                                 zerolinecolor = "#BDBDBD", tickfont = list(size = 11),
                                 fixedrange = FALSE, y_range = y_range),
-      uirevision    = "static",
+      uirevision    = "placeholder",
       plot_bgcolor  = "#FAFAFA",
       paper_bgcolor = "white",
       legend        = list(orientation = "h", y = -0.22, font = list(size = 11),

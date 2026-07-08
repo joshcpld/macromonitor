@@ -19,7 +19,7 @@ server <- function(input, output, session) {
   observeEvent(input$refresh_data, {
     showModal(modalDialog(
       title  = "Refreshing data",
-      "Downloading from ABS and RBA — this may take a minute...",
+      "Downloading from ABS, RBA, and FRED — this may take a minute...",
       footer = NULL
     ))
     tryCatch({
